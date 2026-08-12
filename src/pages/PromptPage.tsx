@@ -1,4 +1,6 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { Star } from "lucide-react";
+import { useEffect } from "react";
 
 import { Button } from "../components/common/Button";
 import { PromptExample } from "../components/prompts/PromptExample";
@@ -10,12 +12,27 @@ import { categories } from "../data/prompts/categories";
 import { getPromptById } from "../lib/prompts/promptUtils";
 
 import { PageContainer } from "../components/layout/PageContainer";
+import { useFavorites } from "../hooks/useFavorites";
+
+import { useRecent } from "../hooks/useRecent";
 
 export default function PromptPage() {
   const { promptId } = useParams<{ promptId: string }>();
   const navigate = useNavigate();
 
+  const { addRecent } = useRecent();
+
+  const { isFavorite, toggleFavorite } = useFavorites();
+
   const prompt = promptId ? getPromptById(promptId) : undefined;
+
+  useEffect(() => {
+    if (!prompt) {
+      return;
+    }
+
+    addRecent(prompt.id);
+  }, [prompt, addRecent]);
 
   if (!prompt) {
     return (
@@ -37,6 +54,8 @@ export default function PromptPage() {
       </PageContainer>
     );
   }
+
+  const favorite = isFavorite(prompt.id);
 
   const category = categories.find((item) => item.id === prompt.categoryId);
 
@@ -86,13 +105,29 @@ export default function PromptPage() {
               </p>
             </div>
 
-            {/* Favorite interface */}
+            {/* Favorite */}
             <Button
               variant="ghost"
               type="button"
-              aria-label={`Favorite ${prompt.title}`}
+              aria-label={
+                favorite
+                  ? `Remove ${prompt.title} from favorites`
+                  : `Add ${prompt.title} to favorites`
+              }
+              aria-pressed={favorite}
+              onClick={() => toggleFavorite(prompt.id)}
+              className="shrink-0"
             >
-              Favorite
+              <Star
+                size={18}
+                strokeWidth={1.8}
+                fill={favorite ? "currentColor" : "none"}
+                aria-hidden="true"
+              />
+
+              <span className="ml-2">
+                {favorite ? "Favorited" : "Favorite"}
+              </span>
             </Button>
           </div>
         </header>

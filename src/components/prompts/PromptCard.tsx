@@ -1,4 +1,4 @@
-import { Heart } from "lucide-react";
+import { Star } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { Badge } from "../common/Badge";
@@ -6,12 +6,17 @@ import { Card } from "../common/Card";
 import { IconButton } from "../common/IconButton";
 import type { Prompt } from "../../types/prompt";
 
+import { useFavorites } from "../../hooks/useFavorites";
+
 interface PromptCardProps {
   prompt: Prompt;
-  onFavorite?: (promptId: string) => void;
 }
 
-export function PromptCard({ prompt, onFavorite }: PromptCardProps) {
+export function PromptCard({ prompt }: PromptCardProps) {
+  const { isFavorite, toggleFavorite } = useFavorites();
+
+  const favorite = isFavorite(prompt.id);
+
   return (
     <Card variant="interactive" className="h-full">
       <article className="flex h-full flex-col">
@@ -31,9 +36,21 @@ export function PromptCard({ prompt, onFavorite }: PromptCardProps) {
           </div>
 
           <IconButton
-            icon={<Heart size={17} aria-hidden="true" />}
-            label={`Favorite ${prompt.title}`}
-            onClick={() => onFavorite?.(prompt.id)}
+            icon={
+              <Star
+                size={18}
+                strokeWidth={1.8}
+                fill={favorite ? "currentColor" : "none"}
+                aria-hidden="true"
+              />
+            }
+            label={
+              favorite
+                ? `Remove ${prompt.title} from favorites`
+                : `Add ${prompt.title} to favorites`
+            }
+            aria-pressed={favorite}
+            onClick={() => toggleFavorite(prompt.id)}
           />
         </div>
 
