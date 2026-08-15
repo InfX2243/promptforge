@@ -5,6 +5,8 @@ import { SearchOverlay } from "../components/search/SearchOverlay";
 import { Footer } from "../components/layout/Footer";
 import { Header } from "../components/layout/Header";
 
+import PageTransition from "../components/common/PageTransition";
+
 export function AppLayout() {
   const [searchOpen, setSearchOpen] = useState(false);
 
@@ -28,7 +30,9 @@ export function AppLayout() {
       <Header onSearchOpen={() => setSearchOpen(true)} />
 
       <main className="flex-1">
-        <Outlet />
+        <PageTransition>
+          <Outlet />
+        </PageTransition>
       </main>
 
       <Footer />

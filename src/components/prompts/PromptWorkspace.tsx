@@ -32,29 +32,53 @@ export function PromptWorkspace({ prompt }: PromptWorkspaceProps) {
   const promptText = selectedVariant?.instructions ?? "";
 
   return (
-    <section aria-labelledby="prompt-workspace-heading" className="space-y-5">
+    <section
+      aria-labelledby="prompt-workspace-heading"
+      className="
+        overflow-hidden
+        rounded-[var(--radius-lg)]
+        border
+        border-[var(--color-border)]
+        bg-[var(--color-surface)]
+        shadow-sm
+      "
+    >
       <h2 id="prompt-workspace-heading" className="sr-only">
         Prompt workspace
       </h2>
 
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <LLMSelector value={selectedLLM} onChange={setSelectedLLM} />
-      </div>
-
       {selectedVariant ? (
         <>
-          <PlaceholderWarning text={promptText} />
+          {/* Toolbar */}
+          <div
+            className="
+              flex
+              min-h-16
+              items-center
+              justify-between
+              gap-4
+              border-b
+              border-[var(--color-border)]
+              px-4
+              py-3
+              sm:px-5
+            "
+          >
+            <LLMSelector value={selectedLLM} onChange={setSelectedLLM} />
 
-          <PromptViewer text={promptText} />
-
-          <div className="flex justify-end">
             <CopyPromptButton text={promptText} />
           </div>
+
+          {/* Placeholder Warning */}
+          <PlaceholderWarning text={promptText} />
+
+          {/* Prompt */}
+          <PromptViewer text={promptText} />
         </>
       ) : (
         <div
           role="status"
-          className="rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] p-4 text-sm text-[var(--color-text-muted)]"
+          className="p-5 text-sm text-[var(--color-text-muted)]"
         >
           No prompt variant is available for {selectedLLM}.
         </div>

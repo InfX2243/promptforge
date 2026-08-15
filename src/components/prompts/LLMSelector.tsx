@@ -1,99 +1,69 @@
-import type { KeyboardEvent } from "react";
+import { ChevronDown, Sparkles } from "lucide-react";
+
 import type { LLM } from "../../types/prompt";
 
 interface LLMSelectorProps {
   value: LLM;
-  onChange: (llm: LLM) => void;
-  disabled?: boolean;
+  onChange: (value: LLM) => void;
 }
 
-const options: Array<{ value: LLM; label: string }> = [
-  {
-    value: "chatgpt",
-    label: "ChatGPT",
-  },
-  {
-    value: "gemini",
-    label: "Gemini",
-  },
-];
-
-export function LLMSelector({
-  value,
-  onChange,
-  disabled = false,
-}: LLMSelectorProps) {
-  const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
-    if (disabled) {
-      return;
-    }
-
-    const currentIndex = options.findIndex((option) => option.value === value);
-
-    if (event.key === "ArrowRight" || event.key === "ArrowDown") {
-      event.preventDefault();
-
-      const nextIndex = (currentIndex + 1) % options.length;
-      onChange(options[nextIndex].value);
-      return;
-    }
-
-    if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
-      event.preventDefault();
-
-      const previousIndex =
-        (currentIndex - 1 + options.length) % options.length;
-
-      onChange(options[previousIndex].value);
-      return;
-    }
-
-    if (event.key === "Home") {
-      event.preventDefault();
-      onChange(options[0].value);
-      return;
-    }
-
-    if (event.key === "End") {
-      event.preventDefault();
-      onChange(options[options.length - 1].value);
-    }
-  };
-
+export function LLMSelector({ value, onChange }: LLMSelectorProps) {
   return (
-    <div
-      role="tablist"
-      aria-label="Select language model"
-      className="inline-flex rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] p-1"
-    >
-      {options.map((option) => {
-        const selected = option.value === value;
+    <div className="flex items-center gap-2">
+      <Sparkles
+        size={16}
+        strokeWidth={1.8}
+        className="text-[var(--color-text-muted)]"
+        aria-hidden="true"
+      />
 
-        return (
-          <button
-            key={option.value}
-            type="button"
-            role="tab"
-            aria-selected={selected}
-            tabIndex={selected ? 0 : -1}
-            disabled={disabled}
-            onClick={() => onChange(option.value)}
-            onKeyDown={handleKeyDown}
-            className={[
-              "rounded-[var(--radius-sm)] px-3 py-1.5 text-sm font-medium",
-              "transition-colors duration-150",
-              "focus-visible:outline-2 focus-visible:outline-offset-2",
-              "focus-visible:outline-[var(--color-accent)]",
-              selected
-                ? "bg-[var(--color-accent)] text-white"
-                : "text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-elevated)] hover:text-[var(--color-text-primary)]",
-              "disabled:cursor-not-allowed disabled:opacity-50",
-            ].join(" ")}
-          >
-            {option.label}
-          </button>
-        );
-      })}
+      <label htmlFor="llm-selector" className="sr-only">
+        Select AI model
+      </label>
+
+      <div className="relative">
+        <select
+          id="llm-selector"
+          value={value}
+          onChange={(event) => onChange(event.target.value as LLM)}
+          className="
+            appearance-none
+            rounded-[var(--radius-sm)]
+            border
+            border-[var(--color-border)]
+            bg-[var(--color-surface)]
+            py-2
+            pl-3
+            pr-9
+            text-sm
+            font-medium
+            text-[var(--color-text-primary)]
+            outline-none
+            transition-colors
+            hover:border-[var(--color-text-muted)]
+            focus:border-[var(--color-accent)]
+            focus:ring-2
+            focus:ring-[var(--color-accent)]/20
+          "
+        >
+          <option value="chatgpt">ChatGPT</option>
+          <option value="gemini">Gemini</option>
+        </select>
+
+        <ChevronDown
+          size={15}
+          strokeWidth={2}
+          className="
+            pointer-events-none
+            absolute
+            right-3
+            top-1/2
+            -translate-y-1/2
+            text-[var(--color-text-muted)]
+          "
+          aria-hidden="true"
+        />
+      </div>
     </div>
   );
 }

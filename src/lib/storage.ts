@@ -17,21 +17,38 @@ const isLocalStorageAvailable = (): boolean => {
   }
 };
 
-export function getStorageItem<T>(key: string, fallback: T): T {
+interface StorageResult<T> {
+  value: T;
+  error: boolean;
+}
+
+export function getStorageItem<T>(key: string, fallback: T): StorageResult<T> {
   if (!isLocalStorageAvailable()) {
-    return fallback;
+    return {
+      value: fallback,
+      error: true,
+    };
   }
 
   try {
     const rawValue = window.localStorage.getItem(key);
 
     if (rawValue === null) {
-      return fallback;
+      return {
+        value: fallback,
+        error: false,
+      };
     }
 
-    return JSON.parse(rawValue) as T;
+    return {
+      value: JSON.parse(rawValue) as T,
+      error: false,
+    };
   } catch {
-    return fallback;
+    return {
+      value: fallback,
+      error: true,
+    };
   }
 }
 

@@ -2,6 +2,7 @@ import { Check, Copy } from "lucide-react";
 
 import { Button } from "../common/Button";
 import { useClipboard } from "../../hooks/useClipboard";
+import { ClipboardError } from "../common/ClipboardError";
 
 interface CopyPromptButtonProps {
   text: string;
@@ -19,25 +20,20 @@ export function CopyPromptButton({
   };
 
   if (error) {
-    return (
-      <Button
-        type="button"
-        variant="secondary"
-        disabled={disabled}
-        onClick={handleCopy}
-        aria-label="Retry copying prompt"
-      >
-        <Copy size={16} aria-hidden="true" />
-        Copy Prompt
-      </Button>
-    );
+    return <ClipboardError onRetry={handleCopy} />;
   }
 
   if (copied) {
     return (
-      <Button type="button" variant="secondary" disabled aria-live="polite">
+      <Button
+        type="button"
+        variant="secondary"
+        disabled
+        aria-live="polite"
+        className="micro-copy-success w-full sm:w-auto"
+      >
         <Check size={16} aria-hidden="true" />
-        Copied
+        <span className="ml-2">Copied!</span>
       </Button>
     );
   }
@@ -48,9 +44,11 @@ export function CopyPromptButton({
       variant="primary"
       disabled={disabled || text.trim().length === 0}
       onClick={handleCopy}
+      aria-live="polite"
+      className="w-full sm:w-auto"
     >
       <Copy size={16} aria-hidden="true" />
-      Copy Prompt
+      <span className="ml-2">Copy Prompt</span>
     </Button>
   );
 }

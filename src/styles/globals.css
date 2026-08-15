@@ -133,6 +133,173 @@ svg {
   outline-offset: 2px;
 }
 
+/* ============================================
+   Microinteractions
+   ============================================ */
+
+.micro-card {
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.micro-card:hover {
+  transform: translateY(-2px);
+}
+
+.micro-card:focus-within {
+  border-color: rgb(255 255 255 / 0.18);
+}
+
+.micro-button {
+  transition:
+    transform 150ms ease,
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease,
+    opacity 150ms ease;
+}
+
+.micro-button:active {
+  transform: scale(0.97);
+}
+
+.micro-icon-button {
+  transition:
+    transform 150ms ease,
+    background-color 150ms ease,
+    color 150ms ease,
+    border-color 150ms ease;
+}
+
+.micro-icon-button:active {
+  transform: scale(0.92);
+}
+
+.micro-favorite {
+  transition:
+    transform 180ms ease,
+    color 180ms ease,
+    background-color 180ms ease;
+}
+
+.micro-favorite.is-favorite {
+  animation: favorite-pop 180ms ease-out;
+}
+
+@keyframes favorite-pop {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.18);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.micro-copy-success {
+  animation: copy-success 180ms ease-out;
+}
+
+@keyframes copy-success {
+  from {
+    opacity: 0.7;
+    transform: scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.micro-search {
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.micro-search:focus-within {
+  border-color: rgb(255 255 255 / 0.22);
+  background-color: rgb(255 255 255 / 0.06);
+  box-shadow: 0 0 0 3px rgb(255 255 255 / 0.04);
+}
+
+.micro-mobile-menu {
+  animation: mobile-menu-enter 180ms ease-out both;
+}
+
+@keyframes mobile-menu-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .micro-card,
+  .micro-button,
+  .micro-icon-button,
+  .micro-favorite,
+  .micro-copy-success,
+  .micro-search {
+    transition: none;
+  }
+
+  .micro-card:hover {
+    transform: none;
+  }
+
+  .micro-favorite.is-favorite,
+  .micro-copy-success,
+  .micro-mobile-menu {
+    animation: none;
+  }
+
+  .micro-button:active,
+  .micro-icon-button:active {
+    transform: none;
+  }
+}
+
+/* =========================================================
+   Page Transitions
+   ========================================================= */
+
+.page-transition {
+  animation: page-enter 220ms ease-out both;
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-transition {
+    animation: none;
+  }
+}
+
 /* =========================================================
    Reduced Motion
    ========================================================= */
@@ -150,4 +317,106 @@ svg {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ============================================
+   Responsive Polish
+   ============================================ */
+
+/*
+ * Minimum supported viewport:
+ * 320px
+ */
+
+@media (max-width: 639px) {
+  .page-container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .page-title {
+    font-size: 1.75rem;
+    line-height: 1.15;
+  }
+
+  .page-description {
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  .prompt-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .category-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .prompt-workspace {
+    padding: 1rem;
+  }
+
+  .prompt-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .prompt-actions > * {
+    width: 100%;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 767px) {
+  .page-container {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  .prompt-grid,
+  .category-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 768px) {
+  .page-container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .page-container {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+}
+
+@media (min-width: 1440px) {
+  .page-container {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+}
+
+/* Prevent accidental horizontal overflow at every width. */
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Long prompt titles, tags and URLs should never force the viewport wider. */
+.prompt-title,
+.prompt-description,
+.prompt-content,
+.prompt-tag {
+  overflow-wrap: anywhere;
 }

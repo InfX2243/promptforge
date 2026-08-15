@@ -1,42 +1,45 @@
-import { AlertCircle } from "lucide-react";
-
-import { extractPlaceholders } from "../../lib/prompts/promptUtils";
+import { AlertTriangle } from "lucide-react";
 
 interface PlaceholderWarningProps {
   text: string;
 }
 
 export function PlaceholderWarning({ text }: PlaceholderWarningProps) {
-  const placeholders = extractPlaceholders(text);
+  const placeholders = text.match(/\{\{[^}]+\}\}/g) ?? [];
   const count = placeholders.length;
 
   if (count === 0) {
     return null;
   }
 
-  const placeholderLabel =
-    count === 1 ? "placeholder remains" : "placeholders remain";
-
   return (
     <div
       role="status"
-      className="flex items-start gap-3 rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 text-sm"
+      className="
+        border-b border-[var(--color-border)]
+        bg-[var(--color-surface)]
+        px-4 py-3
+        sm:px-5
+      "
     >
-      <AlertCircle
-        size={18}
-        aria-hidden="true"
-        className="mt-0.5 shrink-0 text-[var(--color-accent)]"
-      />
+      <div className="flex items-start gap-3">
+        <AlertTriangle
+          size={17}
+          strokeWidth={2}
+          className="mt-0.5 shrink-0 text-[var(--color-accent)]"
+          aria-hidden="true"
+        />
 
-      <div className="min-w-0">
-        <p className="font-medium text-[var(--color-text-primary)]">
-          {count} {placeholderLabel}
-        </p>
+        <div className="min-w-0">
+          <p className="text-sm font-medium text-[var(--color-text-primary)]">
+            {count} {count === 1 ? "placeholder" : "placeholders"} remain
+          </p>
 
-        <p className="mt-1 text-[var(--color-text-muted)]">
-          Replace the highlighted placeholders with your own information before
-          copying the prompt.
-        </p>
+          <p className="mt-0.5 text-sm leading-6 text-[var(--color-text-secondary)]">
+            Replace the highlighted placeholders with your own information
+            before copying the prompt.
+          </p>
+        </div>
       </div>
     </div>
   );

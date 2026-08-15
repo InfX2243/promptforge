@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 import { Button } from "../components/common/Button";
+import { StorageError } from "../components/common/StorageError";
 import { PageContainer } from "../components/layout/PageContainer";
 import { PromptGrid } from "../components/prompts/PromptGrid";
 
@@ -8,7 +9,7 @@ import { prompts } from "../data/prompts/prompts";
 import { useFavorites } from "../hooks/useFavorites";
 
 export default function FavoritesPage() {
-  const { favoriteIds } = useFavorites();
+  const { favoriteIds, storageError } = useFavorites();
 
   const favoriteIdSet = new Set(favoriteIds);
 
@@ -33,8 +34,24 @@ export default function FavoritesPage() {
           </p>
         </header>
 
+        {storageError && (
+          <div className="mt-6">
+            <StorageError />
+          </div>
+        )}
+
         <section className="mt-8">
-          {favoritePrompts.length > 0 ? (
+          {storageError ? (
+            <div className="flex min-h-[40vh] flex-col items-center justify-center rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] px-6 py-12 text-center">
+              <h2 className="text-xl font-semibold text-[var(--color-text-primary)]">
+                Favorites unavailable
+              </h2>
+
+              <p className="mt-2 max-w-md text-sm leading-6 text-[var(--color-text-muted)]">
+                Your saved prompts could not be loaded. Please try again later.
+              </p>
+            </div>
+          ) : favoritePrompts.length > 0 ? (
             <PromptGrid prompts={favoritePrompts} />
           ) : (
             <div className="flex min-h-[40vh] flex-col items-center justify-center rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] px-6 py-12 text-center">

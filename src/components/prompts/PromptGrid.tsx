@@ -13,7 +13,7 @@ export function PromptGrid({
   if (prompts.length === 0) {
     return (
       <div
-        className="flex min-h-48 items-center justify-center rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] px-6 py-10 text-center"
+        className="prompt-grid flex min-h-48 items-center justify-center rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] px-6 py-10 text-center"
         role="status"
       >
         <p className="text-sm text-[var(--color-text-muted)]">{emptyMessage}</p>
@@ -22,7 +22,7 @@ export function PromptGrid({
   }
 
   return (
-    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="prompt-grid grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {prompts.map((prompt) => (
         <PromptCard key={prompt.id} prompt={prompt} />
       ))}

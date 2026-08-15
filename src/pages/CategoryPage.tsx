@@ -1,44 +1,21 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
-import { Button } from "../components/common/Button";
 import { PageContainer } from "../components/layout/PageContainer";
 import { PromptGrid } from "../components/prompts/PromptGrid";
 
 import { categories } from "../data/prompts/categories";
 import { getPromptsByCategory } from "../lib/prompts/promptUtils";
+import { InvalidCategoryState } from "../components/common/InvalidCategoryState";
 
 export default function CategoryPage() {
   const { categoryId } = useParams<{
     categoryId: string;
   }>();
 
-  const navigate = useNavigate();
-
   const category = categories.find((item) => item.id === categoryId);
 
   if (!category) {
-    return (
-      <PageContainer>
-        <main className="flex min-h-[60vh] flex-col items-center justify-center py-12 text-center">
-          <h1 className="text-2xl font-semibold text-[var(--color-text-primary)]">
-            Category not found
-          </h1>
-
-          <p className="mt-2 max-w-md text-sm leading-6 text-[var(--color-text-muted)]">
-            The category you're looking for doesn't exist or may have been
-            removed.
-          </p>
-
-          <Button
-            type="button"
-            className="mt-6"
-            onClick={() => navigate("/explore")}
-          >
-            Explore prompts
-          </Button>
-        </main>
-      </PageContainer>
-    );
+    return <InvalidCategoryState />;
   }
 
   const categoryPrompts = getPromptsByCategory(category.id);

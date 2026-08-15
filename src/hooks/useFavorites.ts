@@ -6,6 +6,7 @@ const FAVORITES_STORAGE_KEY = "promptforge:favorites";
 
 interface UseFavoritesResult {
   favoriteIds: string[];
+  storageError: boolean;
   isFavorite: (promptId: string) => boolean;
   addFavorite: (promptId: string) => void;
   removeFavorite: (promptId: string) => void;
@@ -13,18 +14,31 @@ interface UseFavoritesResult {
 }
 
 export function useFavorites(): UseFavoritesResult {
-  const [favoriteIds, setFavoriteIds] = useState<string[]>(() => {
-    const storedFavorites = getStorageItem<unknown>(FAVORITES_STORAGE_KEY, []);
+  const [storageState] = useState(() => {
+    const result = getStorageItem<unknown>(FAVORITES_STORAGE_KEY, []);
 
-    if (!Array.isArray(storedFavorites)) {
-      return [];
-    }
+    const favoriteIds = Array.isArray(result.value)
+      ? result.value.filter((id): id is string => typeof id === "string")
+      : [];
 
-    return storedFavorites.filter((id): id is string => typeof id === "string");
+    return {
+      favoriteIds,
+      storageError: result.error,
+    };
   });
 
+  const [favoriteIds, setFavoriteIds] = useState<string[]>(
+    storageState.favoriteIds,
+  );
+
+  const [storageError, setStorageError] = useState(storageState.storageError);
+
   const persistFavorites = useCallback((ids: string[]) => {
-    setStorageItem(FAVORITES_STORAGE_KEY, ids);
+    const success = setStorageItem(FAVORITES_STORAGE_KEY, ids);
+
+    if (!success) {
+      setStorageError(true);
+    }
   }, []);
 
   const isFavorite = useCallback(
@@ -87,6 +101,7 @@ export function useFavorites(): UseFavoritesResult {
 
   return {
     favoriteIds,
+    storageError,
     isFavorite,
     addFavorite,
     removeFavorite,
